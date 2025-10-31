@@ -4,7 +4,7 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 
 ---
 
-## 1) App start + Rate prompt
+## 1) App start 
 ![Rates](./images/1.png)
 
 - **What you see**: Banner + section for Rates. Hinihingi ang electricity rate (pesos/kWh).
@@ -16,7 +16,7 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 
 ---
 
-## 2) Solar panel setup (choose size, quantity, sunlight hours)
+## 2) + Rate prompt 
 ![Solar Panel Setup](./images/2.png)
 
 - **What you see**: List ng panel sizes, then inputs for quantity at sunlight hours.
@@ -27,7 +27,7 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 
 ---
 
-## 3) Battery setup (voltage, capacity, quantity)
+## 3) Solar panel setup (choose size, quantity, sunlight hours)
 ![Battery Setup](./images/3.png)
 
 - **What you see**: Menu for battery voltage and capacity (Ah), then quantity.
@@ -38,7 +38,7 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 
 ---
 
-## 4) Devices menu (pick category)
+## 4) Battery setup (voltage, capacity, quantity)
 ![Devices Menu](./images/4.png)
 
 - **What you see**: HOME ELECTRONICS list (Television, Rice Cooker, etc.).
@@ -49,7 +49,7 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 
 ---
 
-## 5) Device details (custom watts, hours, quantity)
+## 5) Devices menu (pick category) Device details (custom watts, hours, quantity)
 ![Device Inputs](./images/5.png)
 
 - **What you see**: Prompts for your device’s watts per hour, hours per day, and quantity.
@@ -61,7 +61,7 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 
 ---
 
-## 6) Receipt table (per device energy)
+## 6) Closing Device menu
 ![Receipt Table](./images/6.png)
 
 - **What you see**: Bordered ASCII table with columns: `#`, `Device`, `Watts(W)`, `Hours`, `Qty`, `EnergyWh`.
@@ -72,7 +72,7 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 
 ---
 
-## 7) Battery summary block
+## 7) Summary Table of your devices
 ![Battery Block](./images/7.png)
 
 - **What you see**: Bordered block showing Battery Volt, Current (Ah), and Capacity (Wh).
@@ -83,7 +83,7 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 
 ---
 
-## 8) Power source (solar) summary + Estimated daily solar energy
+## 8) Receipt table (per device energy) Receipt footer with base bill, solar deficit, and final bill
 ![Power Source Block](./images/8.png)
 
 - **What you see**: Bordered block for Power Source showing Volt (V), Current (A), Power (W), plus a line for estimated daily solar energy.
@@ -95,7 +95,7 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 
 ---
 
-## 9) Receipt footer with base bill, solar deficit, and final bill
+## 9) Battery summary block & Power source (solar) summary + Estimated daily solar energy 
 ![Receipt Footer + Final Bill](./images/9.png)
 
 - **What you see**: Totals (Wh/kWh), Base Daily Bill, then After Solar: Solar Energy, Grid Deficit, Final Daily/Monthly Bill.
