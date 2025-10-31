@@ -8,19 +8,28 @@ public class Main {
         SolarPanel sPanel = new SolarPanel();
         
         int choice, hours;
-        
+        printBanner("SOLAR POWER CALCULATOR");
+        printSection("RATES");
+        double rate = parseDoubleSafe(input("Electricity rate (pesos/kWh) [default " + devices.getRatePerKWh() + "]: ", kb), devices.getRatePerKWh());
+        if (rate > 0) {
+            devices.setRatePerKWh(rate);
+        }
+        printSection("SOLAR PANEL SETUP");
         sPanel.listPanel();
-        sPanel.setPanelVC(Integer.parseInt(input("CHOICE: ", kb)));
-        sPanel.setQuantity(Integer.parseInt(input("QUANTITY: ", kb)));
-        sPanel.setSunlightHour(Integer.parseInt(input("SUNLIGHT HOUR: ", kb)));
+        int panelChoice = promptIntInRange(kb, "CHOICE (1-6): ", 1, 6);
+        sPanel.setPanelVC(panelChoice);
+        sPanel.setQuantity(promptPositiveInt(kb, "QUANTITY: "));
+        sPanel.setSunlightHour(promptPositiveInt(kb, "SUNLIGHT HOUR: "));
         
+        printSection("BATTERY SETUP");
         sBattery.listVolt();        
-        sBattery.setVolt(Integer.parseInt(input("CHOICE: ", kb)));
+        sBattery.setVolt(promptIntInRange(kb, "CHOICE (1-3): ", 1, 3));
         sBattery.listCurrent();
-        sBattery.setCurrent(Integer.parseInt(input("CHOICE: ", kb)));
-        sBattery.setQuantity(Integer.parseInt(input("QUANTITY: ", kb)));
+        sBattery.setCurrent(promptIntInRange(kb, "CHOICE (1-5): ", 1, 5));
+        sBattery.setQuantity(promptPositiveInt(kb, "QUANTITY: "));
         
         do {
+            printSection("HOME ELECTRONICS");
             devices.listDevices();
             choice = parseIntSafe(input("DEVICE: ", kb), -1);
 
@@ -31,24 +40,26 @@ public class Main {
                 case 4:
                 case 5:
                 case 6:
-                    int watts = devices.getDeviceWattage(choice);
+                    int defaultWatts = devices.getDeviceWattage(choice);
                     String label = devices.getDeviceLabel(choice);
-                    if (watts < 0) {
+                    if (defaultWatts < 0) {
                         System.out.println("Invalid device selection.");
                         break;
                     }
-                    if (choice == 5) {
-                        System.out.println("Your " + label + " consumes " + (watts) + " watts/hour");
-                        hours = 24;
-                    } else {
-                        System.out.println("Your " + label + " consumes " + watts + " watts/hour");
-                        hours = parseIntSafe(input("Hours used: ", kb), 0);
+                    System.out.println("Selected: " + label);
+                    double customWatts = parseDoubleSafe(input("Watts (W) of your device consumes per hour [default " + defaultWatts + "]: ", kb), defaultWatts);
+                    hours = promptPositiveInt(kb, "Hours used: ");
+                    int quantity = promptPositiveInt(kb, "Quantity: ");
+                    if (customWatts <= 0) {
+                        System.out.println("Invalid watts. Skipping this item.");
+                        break;
                     }
-                    devices.addUsage(choice, hours);
+                    devices.addUsageCustom(choice, hours, customWatts, quantity);
                     break;
 
                 case 7:
-                    devices.displayReceipt();
+                    printSection("SUMMARY");
+                    devices.displayReceiptWithSolar(sPanel.getDailyEnergyWh());
                     break;
 
                 default:
@@ -57,18 +68,19 @@ public class Main {
         } while (choice >= 1 && choice <= 6);
 
         sBattery.showProperty();
-        if (sBattery.getPower() > devices.getTotalWattHours()) {
-            System.out.printf("Your battery is sufficient with extra %.0f watts", sBattery.getPower() - devices.getTotalWattHours());
+        if (sBattery.getEnergyWh() > devices.getTotalWattHours()) {
+            System.out.printf("Your battery is sufficient with extra %.0f Wh", sBattery.getEnergyWh() - devices.getTotalWattHours());
         } else {
-            System.out.printf("Your battery is insufficient with deficit of %.0f watts", devices.getTotalWattHours() - sBattery.getPower());
+            System.out.printf("Your battery is insufficient with deficit of %.0f Wh", devices.getTotalWattHours() - sBattery.getEnergyWh());
         }
         
         sPanel.showProperty();
-        if (sPanel.getPower() > sBattery.getPower()) {
-            System.out.printf("Your panel is sufficient with extra %.0f watts", sPanel.getPower() - sBattery.getPower());
+        System.out.printf("Estimated daily solar energy: %.0f Wh\n", sPanel.getDailyEnergyWh());
+        if (sPanel.getDailyEnergyWh() > devices.getTotalWattHours()) {
+            System.out.printf("Your panels are sufficient for your daily load with extra %.0f Wh", sPanel.getDailyEnergyWh() - devices.getTotalWattHours());
         } else {
-            System.out.printf("Your panel is insufficient with deficit of %.0f watts", sBattery.getPower() - sPanel.getPower());
-        }        
+            System.out.printf("Your panels are insufficient for your daily load with deficit of %.0f Wh", devices.getTotalWattHours() - sPanel.getDailyEnergyWh());
+        }
     }
 
     public static String input(String message, Scanner kb) {
@@ -82,5 +94,41 @@ public class Main {
         } catch (Exception e) {
             return fallback;
         }
+    }
+
+    private static double parseDoubleSafe(String s, double fallback) {
+        try {
+            return Double.parseDouble(s.trim());
+        } catch (Exception e) {
+            return fallback;
+        }
+    }
+
+    private static int promptPositiveInt(Scanner kb, String message) {
+        int v;
+        do {
+            v = parseIntSafe(input(message, kb), -1);
+            if (v <= 0) System.out.println("Please enter a positive number.");
+        } while (v <= 0);
+        return v;
+    }
+
+    private static int promptIntInRange(Scanner kb, String message, int min, int max) {
+        int v;
+        do {
+            v = parseIntSafe(input(message, kb), Integer.MIN_VALUE);
+            if (v < min || v > max) System.out.println("Please enter a value between " + min + " and " + max + ".");
+        } while (v < min || v > max);
+        return v;
+    }
+
+    private static void printBanner(String title) {
+        System.out.println("\n===============================================");
+        System.out.println("           " + title);
+        System.out.println("===============================================");
+    }
+
+    private static void printSection(String title) {
+        System.out.println("\n-------------------- " + title + " --------------------");
     }
 }

@@ -1,12 +1,9 @@
 public class Battery {
     private double volt, current;
-    private String brand, type;
     
     Battery() {
         this.volt = 0.0;
         this.current = 0.0;
-        this.brand = "No brand";
-        this.type = "No type";
     }
     
     public void setVolt(double volt) {
@@ -17,14 +14,6 @@ public class Battery {
         this.current = current;
     }
     
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-    
-    public void setType(String type) {
-        this.type = type;
-    }
-    
     public double getVolt() {
         return this.volt;
     }
@@ -33,24 +22,19 @@ public class Battery {
         return this.current;
     }
     
-    public String getBrand() {
-        return this.brand;
-    }
-    
-    public String getType() {
-        return this.type;
-    }
-    
     public double getPower() {
         return this.volt * this.current;
     }
     
+    public double getEnergyWh() {
+        return getPower();
+    }
+    
     public void showProperty() {
-        System.out.println("\nBATTERY PROPERTY");
-        System.out.println("Volt: " + this.volt);
-        System.out.println("Current: " + this.current);
-        System.out.println("Brand: " + this.brand);
-        System.out.println("Type: " + this.type);
-        System.out.printf("Capacity: %.2f watts \n\n", getPower());
+        System.out.println("\n+---------------------- BATTERY ----------------------+");
+        System.out.printf("| %-15s : %10.2f %s |%n", "Volt", this.volt, "V ");
+        System.out.printf("| %-15s : %10.2f %s |%n", "Current", this.current, "Ah");
+        System.out.printf("| %-15s : %10s %s |%n", "Capacity", String.format("%,.2f", getEnergyWh()), "Wh");
+        System.out.println("+-----------------------------------------------------+\n");
     }
 }

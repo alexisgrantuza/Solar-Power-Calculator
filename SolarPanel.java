@@ -35,6 +35,14 @@ public class SolarPanel extends EnergySource {
     }
 
     public double getPower() {
-        return ((getVolt() * getCurrent()) * this.quantity) * getSunlightHour();
+        return getRatedPowerW();
+    }
+
+    public double getRatedPowerW() {
+        return (getVolt() * getCurrent()) * this.quantity;
+    }
+
+    public double getDailyEnergyWh() {
+        return getRatedPowerW() * getSunlightHour();
     }
 }

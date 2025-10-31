@@ -1,13 +1,10 @@
 public class EnergySource {
     private double volt, current, efficiency;
-    private String brand, type;
 
     EnergySource() {
         this.volt = 0.0;
         this.current = 0.0;
         this.efficiency = 0.0;
-        this.brand = brand;
-        this.type = "No type";
     }
     
     public void setVolt(double volt) {
@@ -16,14 +13,6 @@ public class EnergySource {
     
     public void setCurrent(double current) {
         this.current = current;
-    }
-    
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-    
-    public void setType(String type) {
-        this.type = type;
     }
     
     public void setEfficiency(double efficiency) {
@@ -38,14 +27,6 @@ public class EnergySource {
         return this.current;
     }
     
-    public String getBrand() {
-        return this.brand;
-    }
-    
-    public String getType() {
-        return this.type;
-    }
-    
     public double getEfficiency() {
         return this.efficiency;
     }
@@ -55,11 +36,10 @@ public class EnergySource {
     }
     
     public void showProperty() {
-        System.out.println("\nPOWER SOURCE PROPERTY");
-        System.out.println("Volt: " + this.volt);
-        System.out.println("Current: " + this.current);
-        System.out.println("Brand: " + this.brand);
-        System.out.println("Type: " + this.type);
-        System.out.printf("Power: %.2f watts \n\n", getPower());
+        System.out.println("\n+-------------------- POWER SOURCE --------------------+");
+        System.out.printf("| %-15s : %10.2f %s |%n", "Volt", this.volt, "V");
+        System.out.printf("| %-15s : %10.2f %s |%n", "Current", this.current, "A");
+        System.out.printf("| %-15s : %10s %s |%n", "Power", String.format("%,.2f", getPower()), "W");
+        System.out.println("+------------------------------------------------------+\n");
     }
 }
