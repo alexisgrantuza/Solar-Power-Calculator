@@ -96,6 +96,15 @@ public class ElectronicDevices {
         return getTotalKWh() * ratePerKWh;
     }
 
+    // Approximate simultaneous peak watts for inverter sizing (sum of watts × quantity)
+    public double getApproxPeakWatts() {
+        double total = 0.0;
+        for (ReceiptItem it : receipt) {
+            total += it.watts * it.quantity;
+        }
+        return total;
+    }
+
     // ----- REPORTING -----
     public List<String> getReceipt() {
         ArrayList<String> lines = new ArrayList<>();

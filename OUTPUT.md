@@ -4,12 +4,16 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 
 ---
 
-## 1) App start 
-![Rates](./images/1.png)
+## 10) Mode selector (New feature entry)
+![Mode](./images/1-1.png)
 
-- **What you see**: Banner for App is starting
+- **What you see**: Two options — [1] Electricity bill calculator, [2] Sizing calculator.
 - **Where in code**: `Main.java`
-  - `printBanner("SOLAR POWER CALCULATOR")`
+  - Prints MODE menu and reads choice with `promptIntInRange(kb, "Choose mode (1-2): ", 1, 2)`
+  - Branches to existing flow (bill) or sizing flow.
+- **How it works**: Simple menu gate before running either feature set.
+
+
 
 
 ---
@@ -132,3 +136,44 @@ Below is a simple walkthrough of each screenshot and where it comes from in the 
 - `Main.promptPositiveInt`, `Main.promptIntInRange` — input validation.
 - `ElectronicDevices.ReceiptItem` — simpleng data holder para sa receipt rows (`label, watts, hours, quantity`).
 
+
+---
+
+
+
+## 11) Sizing inputs (PSH, Voltage, DoD%, Days)
+![Sizing Inputs](./images/1-2.png)
+
+- **What you see**: Prompts for Peak Sun Hours, System Voltage (12/24/48V), DoD %, Days of Autonomy.
+- **Where in code**: `Main.java` (sizing branch)
+  - `printSection("SIZING INPUTS")`
+  - Reads `psh`, selects `systemV` via menu, gets `dodPct`, `days`
+- **How it works**: These values feed the sizing formulas for panel, battery, inverter, controller.
+
+---
+
+## 12) Add devices for sizing
+![Sizing Devices](./images/1-3.png)
+
+- **What you see**: Same device menu as bill mode; enter watts, hours/day, quantity. Finish with option 7.
+- **Where in code**: `Main.java` (sizing branch)
+  - Device loop uses `devices.addUsageCustom(choice, hours, customWatts, quantity)`
+  - Totals computed via `devices.getTotalWattHours()`
+- **How it works**: Daily load (Wh) is calculated the same way; sizing uses this total load.
+
+---
+
+## 13) Sizing results (Required sizes)
+![Sizing Results](./images/1-4.png)
+
+- **What you see**: Printed results — Required Solar Panel (W), Required Battery (Ah @ V and Wh), Recommended Inverter (W), Charge Controller (A).
+- **Where in code**: `Main.java` (sizing compute block)
+  - `double derate = 0.8;`
+  - `requiredPanelW = ceil(loadWh / (psh * derate))`
+  - `requiredBattWh = ceil((loadWh * days) / (DoD%/100))`
+  - `requiredBattAh = ceil(requiredBattWh / systemV)`
+  - `recommendedInverterW = ceil(devices.getApproxPeakWatts() * 1.25)`
+  - `recommendedControllerA = ceil((requiredPanelW / systemV) * 1.25)`
+- **Related code**: `ElectronicDevices.java`
+  - `getApproxPeakWatts()` sums `watts × quantity` to approximate simultaneous peak for inverter sizing.
+- **How it works**: Uses simple rules-of-thumb with safety/derating to produce easy-to-read targets for each component.
